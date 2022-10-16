@@ -14,9 +14,14 @@ resource:
   - Google Earth Engine
   - MODIS
   - Landsat
-  - ALOS-2
-  - ALOS-3
+  - ALOS
+  - SAR data
+  - SAR image
   - Synthetic Aperture Radar
+  - Himawari-8
+  - TerraSAR
+  - ASNARO
+  - Gaofen
   - hyperspectral
   - hyper spectral
   - multispectral
@@ -24,6 +29,9 @@ resource:
 
 usecase:
   - change detection
+  - building detection
+  - road detection
+  - road extraction
   - damage assessment
   - ship detection
   - cloud removal

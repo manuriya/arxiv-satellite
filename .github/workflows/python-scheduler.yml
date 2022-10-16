@@ -1,0 +1,28 @@
+name: arxiv-satellite
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Python 3.9
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi     
+      - name: Create dotenv file
+        shell: bash
+        run: |
+          touch .env
+          echo "DEEPL_API_TOKEN=${{ secrets.DEEPL_API_TOKEN }}" >> .env
+          echo "SLACK_API_TOKEN=${{ secrets.SLACK_API_TOKEN }}" >> .env
+      - name: Run arxiv-satellite
+        run: python run.py
