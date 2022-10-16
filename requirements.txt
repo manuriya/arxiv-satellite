@@ -1,0 +1,5 @@
+deepl
+feedparser
+python-dotenv
+omegaconf
+slacker

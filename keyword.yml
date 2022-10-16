@@ -1,0 +1,35 @@
+genre:
+  - remote sensing
+  - earth observation
+  - geospatial
+  - spatiotemporal
+
+resource:
+  - satellite
+  - aerial
+  - UAV
+  - WorldView
+  - Pleiades
+  - Sentinel
+  - Google Earth Engine
+  - MODIS
+  - Landsat
+  - ALOS-2
+  - ALOS-3
+  - Synthetic Aperture Radar
+  - hyperspectral
+  - hyper spectral
+  - multispectral
+  - multi spectral
+
+usecase:
+  - change detection
+  - damage assessment
+  - ship detection
+  - cloud removal
+  - flood detection
+  - wildfire
+  - landuse
+  - land use
+  - landcover
+  - land cover
