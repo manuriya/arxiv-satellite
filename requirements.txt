@@ -2,4 +2,4 @@ deepl
 feedparser
 python-dotenv
 omegaconf
-slacker
+slack-sdk

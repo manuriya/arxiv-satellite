@@ -6,7 +6,7 @@ from typing import Union
 import feedparser
 from deepl import Translator
 from omegaconf import OmegaConf
-from slacker import Slacker
+from slack_sdk import WebClient
 
 import slackbot_settings
 
@@ -53,15 +53,15 @@ def main(patterns: list[re.Pattern]) -> None:
     articles = [i for i in list(match_paper(rss, patterns)) if i is not None]
 
     # Post message to slack channel
-    slack = Slacker(slackbot_settings.SLACK_API_TOKEN)
+    slack = WebClient(slackbot_settings.SLACK_API_TOKEN)
     for article in articles:
         text = format_header(article)
         attachment = dict(title="Abstract", fields=article["fields"], color=article["color"])
-        slack.chat.post_message(slackbot_settings.CHANNEL,
-                                text=text,
-                                as_user=True,
-                                unfurl_links=False,
-                                attachments=[attachment])
+        slack.chat_postMessage(channel=slackbot_settings.CHANNEL,
+                               text=text,
+                               as_user=True,
+                               unfurl_links=False,
+                               attachments=[attachment])
 
 
 if __name__ == "__main__":
