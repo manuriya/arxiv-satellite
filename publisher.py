@@ -1,6 +1,6 @@
 import re
 from abc import ABC, abstractmethod
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 import feedparser
 from deepl import Translator
@@ -74,7 +74,7 @@ class MDPI(Publisher):
         self.rss = feedparser.parse(f"https://www.mdpi.com/rss/journal/{genre}")
 
     def get_publish_date(self, article: FeedParserDict) -> datetime:
-        return datetime(*article.published_parsed[:6], tzinfo=timezone.utc).date()
+        return datetime(*article.published_parsed[:6], tzinfo=timezone.utc).date() + timedelta(days=1)
 
     @staticmethod
     def parse_title(title: str) -> str:
