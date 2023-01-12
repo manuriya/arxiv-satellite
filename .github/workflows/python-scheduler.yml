@@ -24,5 +24,7 @@ jobs:
           touch .env
           echo "DEEPL_API_TOKEN=${{ secrets.DEEPL_API_TOKEN }}" >> .env
           echo "SLACK_API_TOKEN=${{ secrets.SLACK_API_TOKEN }}" >> .env
+          echo "MS_TRANSLATE_KEY=${{ secrets.MS_TRANSLATE_KEY }}" >> .env
+          echo "MS_TRANSLATE_REGION=${{ secrets.MS_TRANSLATE_REGION }}" >> .env
       - name: Run arxiv-satellite
         run: python run.py

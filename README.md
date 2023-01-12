@@ -17,3 +17,8 @@ DeepLによる翻訳結果も一緒に表示されます.
 ## 検索キーワード
 
 `keyword.yml`に記載してください
+
+## Update
+
+* DeepLが使用できなくなった場合にMicrosoft Translatorを使用できるようにしました
+    + `MS_TRANSLATE_KEY`と`MS_TRANSLATE_REGION`にそれぞれTranslatorリソースのKey1とregionをセットしてください

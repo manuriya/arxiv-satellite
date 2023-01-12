@@ -1,8 +1,10 @@
 import re
+import uuid
 from abc import ABC, abstractmethod
 from datetime import datetime, timedelta, timezone
 
 import feedparser
+import requests
 from deepl import Translator
 from feedparser.util import FeedParserDict
 
@@ -38,8 +40,23 @@ class Publisher(ABC):
 
     @staticmethod
     def translate(description: str) -> list[dict]:
-        translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
-        translate_description = translator.translate_text(description, source_lang="EN", target_lang="JA").text
+        try:
+            # DeepL Translator
+            translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
+            translate_description = translator.translate_text(description, source_lang="EN", target_lang="JA").text
+        except Exception:
+            # Microsoft Translator
+            url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=ja"
+            headers = {
+                "Ocp-Apim-Subscription-Key": slackbot_settings.MS_TRANSLATE_KEY,
+                "Ocp-Apim-Subscription-Region": slackbot_settings.MS_TRANSLATE_REGION,
+                "Content-type": "application/json",
+                "X-ClientTraceId": str(uuid.uuid4())
+            }
+            request = requests.post(url, headers=headers, json=[dict(text=description)])
+            response = request.json()
+            translate_description = response[0]["translations"][0]["text"]
+
         return [
             dict(title="English", value=description, short=True),
             dict(title="Japanese", value=translate_description, short=True)
