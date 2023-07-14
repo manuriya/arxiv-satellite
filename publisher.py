@@ -44,7 +44,7 @@ class Publisher(ABC):
             # DeepL Translator
             translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
             translate_description = translator.translate_text(description, source_lang="EN", target_lang="JA").text
-        except Exception:
+        except DeeplException:
             # Microsoft Translator
             url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=ja"
             headers = {
@@ -56,11 +56,13 @@ class Publisher(ABC):
             request = requests.post(url, headers=headers, json=[dict(text=description)])
             response = request.json()
             translate_description = response[0]["translations"][0]["text"]
-
-        return [
-            dict(title="English", value=description, short=True),
-            dict(title="Japanese", value=translate_description, short=True)
-        ]
+        except Exception:
+            translate_description = description
+        finally:
+            return [
+                dict(title="English", value=description, short=True),
+                dict(title="Japanese", value=translate_description, short=True)
+            ]
 
 
 class ArXiv(Publisher):
