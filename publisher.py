@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, timezone
 
 import feedparser
 import requests
-from deepl import Translator
+from deepl import exceptions, Translator
 from feedparser.util import FeedParserDict
 
 import slackbot_settings
@@ -44,7 +44,7 @@ class Publisher(ABC):
             # DeepL Translator
             translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
             translate_description = translator.translate_text(description, source_lang="EN", target_lang="JA").text
-        except DeeplException:
+        except exceptions.DeepLException:
             # Microsoft Translator
             url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=ja"
             headers = {
