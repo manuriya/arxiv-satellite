@@ -83,7 +83,7 @@ class ArXiv(Publisher):
 
     def format_article(self, article: FeedParserDict, color: str) -> dict[str, str]:
         title = self.parse_title(article.title)
-        link = article.link.replace("http", "https")
+        link = article.link.replace("http:", "https:")
         description = " ".join(
             article.description[3:].replace("\n", "").split("</p>")[0].split(" ")
         )
