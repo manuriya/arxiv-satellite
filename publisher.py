@@ -79,7 +79,7 @@ class ArXiv(Publisher):
         title = self.parse_title(article.title)
         link = article.link.replace("http:", "https:")
         description = " ".join(
-            article.description.split("Abstract:")[1:].replace("\n", "").split("</p>")[0].split(" ")
+            article.description.split("Abstract:")[1].replace("\n", "").split("</p>")[0].split(" ")
         )
         authors = ", ".join(
             [re.sub(r"<a href=.*\">", "", author).replace("</a>", "") for author in article.author.split(",")]
