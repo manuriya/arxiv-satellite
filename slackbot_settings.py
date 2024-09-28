@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 load_dotenv(".env")
 
 # API token
-SLACK_API_TOKEN = os.environ.get("SLACK_API_TOKEN")
+SLACK_API_TOKEN = [os.environ.get(key) for key in os.environ.keys() if "SLACK_API_TOKEN" in key]
 DEEPL_API_TOKEN = os.environ.get("DEEPL_API_TOKEN")
 MS_TRANSLATE_KEY = os.environ.get("MS_TRANSLATE_KEY")
 MS_TRANSLATE_REGION = os.environ.get("MS_TRANSLATE_REGION")

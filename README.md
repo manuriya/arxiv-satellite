@@ -9,7 +9,7 @@ DeepLによる翻訳結果も一緒に表示されます.
 
 ## 環境変数
 
-* `DEEPL_API_TOKEN`と`SLACK_API_TOKEN`にそれぞれDeepLのAPIキーとIncoming WebHookのAPIキーをセットしてください
+* `DEEPL_API_TOKEN`と`SLACK_API_TOKEN`にそれぞれDeepLのAPIキーとBot User OAuth Tokenをセットしてください
 * `slackbot_setting.py`内の`CHANNEL`にはslackのworkspace内のチャンネル名を指定してください
 * `slackbot_setting.py`内の`PUBLISH`には論文検索先をkeyに、ジャンルをvalueとしたdictionaryを作成してください.  
     + 論文検索先のジャンルが複数ある場合はvalueをlist型にして渡してください

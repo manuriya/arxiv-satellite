@@ -33,22 +33,16 @@ class Publisher(ABC):
                 yield None
             else:
                 title = self.parse_title(article.title)
-                if bool(
-                    [p.search(title) for p in patterns if p.search(title) is not None]
-                ):
+                if bool([p.search(title) for p in patterns if p.search(title) is not None]):
                     count += 1
-                    yield self.format_article(
-                        article, slackbot_settings.COLOR[(count - 1) % 7]
-                    )
+                    yield self.format_article(article, slackbot_settings.COLOR[(count - 1) % 7])
 
     @staticmethod
     def translate(description: str) -> list[dict]:
         try:
             # DeepL Translator
             translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
-            translate_description = translator.translate_text(
-                description, source_lang="EN", target_lang="JA"
-            ).text
+            translate_description = translator.translate_text(description, source_lang="EN", target_lang="JA").text
         except exceptions.DeepLException:
             # Microsoft Translator
             url = "https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=en&to=ja"
@@ -85,13 +79,10 @@ class ArXiv(Publisher):
         title = self.parse_title(article.title)
         link = article.link.replace("http:", "https:")
         description = " ".join(
-            article.description[3:].replace("\n", "").split("</p>")[0].split(" ")
+            article.description.split("Abstract:")[1:].replace("\n", "").split("</p>")[0].split(" ")
         )
         authors = ", ".join(
-            [
-                re.sub(r"<a href=.*\">", "", author).replace("</a>", "")
-                for author in article.author.split(",")
-            ]
+            [re.sub(r"<a href=.*\">", "", author).replace("</a>", "") for author in article.author.split(",")]
         )
 
         return dict(
@@ -108,9 +99,7 @@ class MDPI(Publisher):
         self.rss = feedparser.parse(f"https://www.mdpi.com/rss/journal/{genre}")
 
     def get_publish_date(self, article: FeedParserDict) -> datetime:
-        return datetime(
-            *article.published_parsed[:6], tzinfo=timezone.utc
-        ).date() + timedelta(days=1)
+        return datetime(*article.published_parsed[:6], tzinfo=timezone.utc).date() + timedelta(days=1)
 
     @staticmethod
     def parse_title(title: str) -> str:
