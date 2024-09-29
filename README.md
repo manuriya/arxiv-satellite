@@ -5,11 +5,16 @@
 リモセン関連の論文を取得するSlackbotです.  
 検索先はarXiv CS-CVとMDPI Remote Sensingに対応しています.  
 keywordや検索先を変えることで他のジャンルの論文も検索することが出来ます.  
-DeepLによる翻訳結果も一緒に表示されます.
+DeepLによる翻訳結果も一緒に表示されます（DeepLが制限に引っかかる場合はMicrosoft Translatorを使用する風になっています）.
 
 ## 環境変数
 
-* `DEEPL_API_TOKEN`と`SLACK_API_TOKEN`にそれぞれDeepLのAPIキーとBot User OAuth Tokenをセットしてください
+* GitHub Actionsを使用する際は`ENVIRONMENTS`というSecretsに使用するすべての環境変数をセットしてください
+* 必要な変数は以下になります.
+    + SLACK_API_TOKEN: SlackbotのBOt User OAuth Token. 複数workspaceで使用する場合はSLACK_API_TOKEN1という風に「SLACK_API_TOKEN」にsuffixをつけること
+    + DEEPL_API_TOKEN: DeepLのAPIキー
+    + MS_TRANSLATE_KEY: Microsoft TranslatorのKey1
+    + MS_TRANSLATE_REGION: Microsoft Translatorのregion
 * `slackbot_setting.py`内の`CHANNEL`にはslackのworkspace内のチャンネル名を指定してください
 * `slackbot_setting.py`内の`PUBLISH`には論文検索先をkeyに、ジャンルをvalueとしたdictionaryを作成してください.  
     + 論文検索先のジャンルが複数ある場合はvalueをlist型にして渡してください
@@ -17,8 +22,3 @@ DeepLによる翻訳結果も一緒に表示されます.
 ## 検索キーワード
 
 `keyword.yml`に記載してください
-
-## Update
-
-* DeepLが使用できなくなった場合にMicrosoft Translatorを使用できるようにしました
-    + `MS_TRANSLATE_KEY`と`MS_TRANSLATE_REGION`にそれぞれTranslatorリソースのKey1とregionをセットしてください
