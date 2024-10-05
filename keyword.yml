@@ -22,8 +22,10 @@ resource:
   - TerraSAR
   - ASNARO
   - Gaofen
+  - Hyperspectral
   - hyperspectral
   - hyper spectral
+  - Multispectral
   - multispectral
   - multi spectral
 
@@ -35,6 +37,8 @@ usecase:
   - damage assessment
   - ship detection
   - cloud removal
+  - Flood damage
+  - flood damage
   - flood detection
   - vehicle detection
   - wildfire
