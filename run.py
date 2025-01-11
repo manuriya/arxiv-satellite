@@ -8,42 +8,7 @@ from slack_sdk import WebClient
 import slackbot_settings
 
 
-def create_patterns(yaml_name: str) -> list[re.Pattern]:
-    """
-    Create a list of regex patterns from a YAML file.
-
-    Args:
-        yaml_name (str): The name of the YAML file containing keywords.
-
-    Returns:
-        (list[re.Pattern]): A list of compiled regex patterns.
-    """
-    keywords = OmegaConf.load(yaml_name)
-    patterns = []
-    for key in keywords:
-        match key:
-            case "fixed":
-                patterns.extend([re.compile(p) for p in keywords[key]])
-            case "variable":
-                for p in keywords[key]:
-                    patterns.append(re.compile(p, re.IGNORECASE))
-                    if len(p.split(" ")) > 1:
-                        patterns.append(re.compile("".join(p.split(" ")), re.IGNORECASE))
-            case _:
-                raise ValueError(f"Invalid keyword: {key}")
-    return patterns
-
-
 def get_articles(patterns: list[re.Pattern]) -> list[dict[str, str]]:
-    """
-    Retrieve articles that match the given patterns.
-
-    Args:
-        patterns (list[re.Pattern]): A list of compiled regex patterns.
-
-    Returns:
-        (list[dict[str, str]]): A list of dictionaries containing article information.
-    """
     articles = []
     for publish, genre in slackbot_settings.PUBLISH.items():
         genre = [genre] if isinstance(genre, str) else genre
@@ -54,26 +19,18 @@ def get_articles(patterns: list[re.Pattern]) -> list[dict[str, str]]:
 
 
 def main(patterns: list[re.Pattern]) -> None:
-    """
-    Main function to post articles to Slack channels.
+    articles = get_articles(patterns)
 
-    Args:
-        patterns (list[re.Pattern]): A list of compiled regex patterns.
-    """
-    slacks = [WebClient(token) for token in slackbot_settings.SLACK_API_TOKEN]
-    for article in get_articles(patterns):
+    # Post message to slack channel
+    slack = WebClient(slackbot_settings.SLACK_API_TOKEN)
+    for article in articles:
         text = f"*{article['title']}*\n" + f"{article['title_link']}\n" + f"{article['author']}\n"
         attachment = dict(title="Abstract", fields=article["fields"], color=article["color"])
-
-        for slack in slacks:
-            slack.chat_postMessage(
-                channel=slackbot_settings.CHANNEL,
-                text=text,
-                as_user=True,
-                unfurl_links=False,
-                attachments=[attachment],
-            )
+        slack.chat_postMessage(
+            channel=slackbot_settings.CHANNEL, text=text, as_user=True, unfurl_links=False, attachments=[attachment]
+        )
 
 
 if __name__ == "__main__":
-    main(create_patterns("keyword.yml"))
+    keywords = OmegaConf.load("keyword.yml")
+    main([re.compile(p, re.IGNORECASE) for p in sum([keywords[key] for key in keywords], [])])
