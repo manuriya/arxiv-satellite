@@ -1,0 +1,43 @@
+[project]
+authors = [{name = "manuriya"}]
+description = "Add a short description here"
+name = "arxiv-satellite"
+requires-python = ">= 3.11"
+version = "0.1.0"
+dependencies = ["deepl>=1.20.0,<2"]
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling"]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["win-64"]
+
+[tool.pixi.pypi-dependencies]
+arxiv_satellite = { path = ".", editable = true }
+
+[tool.pixi.tasks]
+
+[tool.pixi.dependencies]
+python = ">=3.13.1,<3.14"
+omegaconf = ">=2.3.0,<3"
+feedparser = ">=6.0.11,<7"
+python-dotenv = ">=1.0.1,<2"
+packaging = ">=24.2,<25"
+slack-sdk = ">=3.34.0,<4"
+
+[tool.ruff]
+line-length = 119
+target-version = "py313"
+
+[tool.ruff.lint]
+ignore = ["F401", "F811", "E203", "E266", "E501"]
+select = ["F", "E", "W", "C90", "I", "N", "YTT"]
+unfixable = ["E712"]
+
+[tool.ruff.lint.mccabe]
+max-complexity = 10
+
+[tool.ruff.format]
+quote-style = "double"

@@ -1,48 +1,52 @@
-genre:
-  - remote sensing
-  - earth observation
-  - geospatial
-
-resource:
-  - satellite
-  - aerial
+fixed:
   - UAV
   - WorldView
+  - GeoEye
+  - RapidEye
   - Pleiades
+  - SPOT
+  - KOMPSAT
   - Sentinel
   - Google Earth Engine
   - MODIS
   - Landsat
   - ALOS
-  - SAR data
-  - SAR image
+  - SAR\s
   - InSAR
   - Synthetic Aperture Radar
   - Himawari-8
   - TerraSAR
   - ASNARO
   - Gaofen
-  - Hyperspectral
-  - hyperspectral
-  - hyper spectral
-  - Multispectral
-  - multispectral
-  - multi spectral
+  - PlanetScope
 
-usecase:
+variable:
+  - remote sensing
+  - earth observation
+  - geospatial
+  - satellite
+  - aerial
+  - hyper spectral
+  - multi spectral
   - change detection
   - building detection
   - road detection
   - road extraction
   - damage assessment
   - ship detection
+  - cyclone forecast
   - cloud removal
-  - Flood damage
-  - flood damage
   - flood detection
+  - flood damage
+  - vegetation
+  - car detection
   - vehicle detection
   - wildfire
-  - landuse
   - land use
-  - landcover
   - land cover
+  - urban mapping
+  - forest monitoring
+  - glacier monitoring
+  - coastal erosion
+  - soil moisture
+  - biomass estimation
