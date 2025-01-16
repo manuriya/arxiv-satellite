@@ -19,6 +19,8 @@ fixed:
   - ASNARO
   - Gaofen
   - PlanetScope
+  - GCOM
+  - EarthCARE
 
 variable:
   - remote sensing
