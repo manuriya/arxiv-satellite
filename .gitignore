@@ -1,4 +1,5 @@
 
 # pixi environments
+.env
 .pixi
 *.egg-info
