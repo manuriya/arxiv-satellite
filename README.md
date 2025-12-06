@@ -15,7 +15,7 @@ DeepLによる翻訳結果も一緒に表示されます（DeepLが制限に引�
     + DEEPL_API_TOKEN: DeepLのAPIキー
     + MS_TRANSLATE_KEY: Microsoft TranslatorのKey1
     + MS_TRANSLATE_REGION: Microsoft Translatorのregion
-* `slackbot_setting.py`内の`CHANNEL`にはslackのworkspace内のチャンネル名を指定してください
+    + POST_CHANNEL: 投稿先のチャンネル名. 複数workspaceで使用する場合はPOST_CHANNEL1という風に「POST_CHANNEL」にsuffixをつけること
 * `slackbot_setting.py`内の`PUBLISH`には論文検索先をkeyに、ジャンルをvalueとしたdictionaryを作成してください.  
     + 論文検索先のジャンルが複数ある場合はvalueをlist型にして渡してください
 

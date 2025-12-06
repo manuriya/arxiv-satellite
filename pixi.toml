@@ -1,0 +1,18 @@
+[workspace]
+authors = ["manuriya"]
+channels = ["conda-forge"]
+name = "arxiv-satellite"
+platforms = ["win-64"]
+version = "0.1.0"
+
+[tasks]
+
+[dependencies]
+python = "3.13.*"
+feedparser = ">=6.0.12,<7"
+python-dotenv = ">=1.2.1,<2"
+omegaconf = ">=2.3.0,<3"
+slack-sdk = ">=3.39.0,<4"
+
+[pypi-dependencies]
+deepl = ">=1.25.0, <2"

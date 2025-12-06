@@ -1,5 +1,12 @@
+.env
+*.egg-info
+__pycache__/
+*.pyc
+
+# VSCode settings
+launch.json
+.vscode/
 
 # pixi environments
-.env
-.pixi
-*.egg-info
+.pixi/*
+!.pixi/config.toml

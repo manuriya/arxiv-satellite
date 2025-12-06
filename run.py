@@ -28,7 +28,9 @@ def create_patterns(yaml_name: str) -> list[re.Pattern]:
                 for p in keywords[key]:
                     patterns.append(re.compile(p, re.IGNORECASE))
                     if len(p.split(" ")) > 1:
-                        patterns.append(re.compile("".join(p.split(" ")), re.IGNORECASE))
+                        patterns.append(
+                            re.compile("".join(p.split(" ")), re.IGNORECASE)
+                        )
             case _:
                 raise ValueError(f"Invalid keyword: {key}")
     return patterns
@@ -49,7 +51,9 @@ def get_articles(patterns: list[re.Pattern]) -> list[dict[str, str]]:
         genre = [genre] if isinstance(genre, str) else genre
         for g in genre:
             target = getattr(import_module("publisher"), publish)(genre=g)
-            articles.extend([i for i in list(target.get_articles(patterns)) if i is not None])
+            articles.extend(
+                [i for i in list(target.get_articles(patterns)) if i is not None]
+            )
     return articles
 
 
@@ -62,12 +66,18 @@ def main(patterns: list[re.Pattern]) -> None:
     """
     slacks = [WebClient(token) for token in slackbot_settings.SLACK_API_TOKEN]
     for article in get_articles(patterns):
-        text = f"*{article['title']}*\n" + f"{article['title_link']}\n" + f"{article['author']}\n"
-        attachment = dict(title="Abstract", fields=article["fields"], color=article["color"])
+        text = (
+            f"*{article['title']}*\n"
+            + f"{article['title_link']}\n"
+            + f"{article['author']}\n"
+        )
+        attachment = dict(
+            title="Abstract", fields=article["fields"], color=article["color"]
+        )
 
-        for slack in slacks:
+        for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
             slack.chat_postMessage(
-                channel=slackbot_settings.CHANNEL,
+                channel=channel,
                 text=text,
                 as_user=True,
                 unfurl_links=False,
