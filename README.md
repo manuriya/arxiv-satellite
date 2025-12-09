@@ -15,7 +15,7 @@ DeepLによる翻訳結果も一緒に表示されます（DeepLが制限に引�
     + MS_TRANSLATE_REGION: Microsoft Translatorのregion
     + SLACK_API_TOKEN: SlackbotのBot User OAuth Token.
     + POST_CHANNEL: 投稿先のチャンネル名.
-* SLACK_API_TOKENとPOST_CHANNELは複数workspaceでの運用を行うときは「SLACK_API_TOKEN1=...\nSLACK_API_TOKEN2=...」という風にsuffixをつけた値をセットしてください
+* SLACK_API_TOKENとPOST_CHANNELは複数workspaceでの運用を行うときはSLACK_API_TOKEN1という風にsuffixをつけてセットしてください
 
 * `slackbot_setting.py`内の`PUBLISH`には論文検索先をkeyに、ジャンルをvalueとしたdictionaryを作成してください.  
     + 論文検索先のジャンルが複数ある場合はvalueをlist型にして渡してください
