@@ -24,7 +24,11 @@ jobs:
           echo "DEEPL_API_TOKEN=${{ secrets.DEEPL_API_TOKEN }}" >> .env
           echo "MS_TRANSLATE_KEY=${{ secrets.MS_TRANSLATE_KEY }}" >> .env
           echo "MS_TRANSLATE_REGION=${{ secrets.MS_TRANSLATE_REGION }}" >> .env
-          echo "${{ secrets.SLACK_API_TOKEN }}" > .env
-          echo "${{ secrets.POST_CHANNEL }}" > .env
+          echo "SLACK_API_TOKEN1=${{ secrets.SLACK_API_TOKEN1 }}" >> .env
+          echo "SLACK_API_TOKEN2=${{ secrets.SLACK_API_TOKEN2 }}" >> .env
+          echo "SLACK_API_TOKEN3=${{ secrets.SLACK_API_TOKEN3 }}" >> .env
+          echo "POST_CHANNEL1=${{ secrets.POST_CHANNEL1 }}" >> .env
+          echo "POST_CHANNEL2=${{ secrets.POST_CHANNEL2 }}" >> .env
+          echo "POST_CHANNEL3=${{ secrets.POST_CHANNEL3 }}" >> .env
       - name: Run arxiv-satellite
         run: python run.py
