@@ -20,6 +20,11 @@ jobs:
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Create dotenv file
         run: |
-          echo "${{ secrets.ENVIRONMENTS }}" > .env
+          touch .env
+          echo "DEEPL_API_TOKEN=${{ secrets.DEEPL_API_TOKEN }}" >> .env
+          echo "MS_TRANSLATE_KEY=${{ secrets.MS_TRANSLATE_KEY }}" >> .env
+          echo "MS_TRANSLATE_REGION=${{ secrets.MS_TRANSLATE_REGION }}" >> .env
+          echo "${{ secrets.SLACK_API_TOKEN }}" >> .env
+          echo "${{ secrets.POST_CHANNEL }}" >> .env
       - name: Run arxiv-satellite
         run: python run.py

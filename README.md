@@ -9,13 +9,14 @@ DeepLによる翻訳結果も一緒に表示されます（DeepLが制限に引�
 
 ## 環境変数
 
-* GitHub Actionsを使用する際は`ENVIRONMENTS`というSecretsに使用するすべての環境変数をセットしてください
-* 必要な変数は以下になります.
-    + SLACK_API_TOKEN: SlackbotのBot User OAuth Token. 複数workspaceで使用する場合はSLACK_API_TOKEN1という風に「SLACK_API_TOKEN」にsuffixをつけること
+* GitHub Actionsを使用する際は以下をSecretsにセットしてください
     + DEEPL_API_TOKEN: DeepLのAPIキー
     + MS_TRANSLATE_KEY: Microsoft TranslatorのKey1
     + MS_TRANSLATE_REGION: Microsoft Translatorのregion
-    + POST_CHANNEL: 投稿先のチャンネル名. 複数workspaceで使用する場合はPOST_CHANNEL1という風に「POST_CHANNEL」にsuffixをつけること
+    + SLACK_API_TOKEN: SlackbotのBot User OAuth Token.
+    + POST_CHANNEL: 投稿先のチャンネル名.
+* SLACK_API_TOKENとPOST_CHANNELは複数workspaceでの運用を行うときは「SLACK_API_TOKEN1=...\nSLACK_API_TOKEN2=...」という風にsuffixをつけた値をセットしてください
+
 * `slackbot_setting.py`内の`PUBLISH`には論文検索先をkeyに、ジャンルをvalueとしたdictionaryを作成してください.  
     + 論文検索先のジャンルが複数ある場合はvalueをlist型にして渡してください
 
