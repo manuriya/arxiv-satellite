@@ -66,22 +66,33 @@ def main(patterns: list[re.Pattern]) -> None:
     """
     slacks = [WebClient(token) for token in slackbot_settings.SLACK_API_TOKEN]
     for article in get_articles(patterns):
-        text = (
-            f"*{article['title']}*\n"
-            + f"{article['title_link']}\n"
-            + f"{article['author']}\n"
+        header = dict(
+            type="header", text=dict(type="plain_text", text=article["title"])
         )
-        attachment = dict(
-            title="Abstract", fields=article["fields"], color=article["color"]
+        url = dict(
+            type="section",
+            text=dict(
+                type="mrkdwn",
+                text=f"<{article['title_link']}|{article['title_link']}>",
+            ),
         )
+        blocks = [
+            dict(type="divider"),
+            header,
+            url,
+            dict(
+                type="section", text={"type": "mrkdwn", "text": article["description"]}
+            ),
+        ]
 
         for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
             slack.chat_postMessage(
                 channel=channel,
-                text=text,
+                text="",
                 as_user=True,
                 unfurl_links=False,
-                attachments=[attachment],
+                blocks=blocks,
+                # attachments=[dict(color=article["color"], fields=article["fields"])],
             )
 
 

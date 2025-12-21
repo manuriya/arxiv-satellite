@@ -1,5 +1,6 @@
 deepl
 feedparser
+google-genai
 packaging
 python-dotenv
 omegaconf

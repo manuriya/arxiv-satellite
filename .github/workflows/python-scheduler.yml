@@ -2,7 +2,7 @@ name: arxiv-satellite
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    - cron: "0 8 * * *"
   workflow_dispatch:
 
 jobs:
@@ -24,6 +24,7 @@ jobs:
           echo "DEEPL_API_TOKEN=${{ secrets.DEEPL_API_TOKEN }}" >> .env
           echo "MS_TRANSLATE_KEY=${{ secrets.MS_TRANSLATE_KEY }}" >> .env
           echo "MS_TRANSLATE_REGION=${{ secrets.MS_TRANSLATE_REGION }}" >> .env
+          echo "GEMINI_API_TOKEN=${{ secrets.GEMINI_API_TOKEN }}" >> .env
           echo "SLACK_API_TOKEN1=${{ secrets.SLACK_API_TOKEN1 }}" >> .env
           echo "SLACK_API_TOKEN2=${{ secrets.SLACK_API_TOKEN2 }}" >> .env
           echo "SLACK_API_TOKEN3=${{ secrets.SLACK_API_TOKEN3 }}" >> .env

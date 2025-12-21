@@ -16,3 +16,4 @@ slack-sdk = ">=3.39.0,<4"
 
 [pypi-dependencies]
 deepl = ">=1.25.0, <2"
+google-genai = ">=1.55.0, <2"
