@@ -13,6 +13,7 @@ DeepLによる翻訳結果も一緒に表示されます（DeepLが制限に引�
     + DEEPL_API_TOKEN: DeepLのAPIキー
     + MS_TRANSLATE_KEY: Microsoft TranslatorのKey1
     + MS_TRANSLATE_REGION: Microsoft Translatorのregion
+    + GEMINI_API_TOKEN: GeminiのAPI Token.
     + SLACK_API_TOKEN: SlackbotのBot User OAuth Token.
     + POST_CHANNEL: 投稿先のチャンネル名.
 * SLACK_API_TOKENとPOST_CHANNELは複数workspaceでの運用を行うときはSLACK_API_TOKEN1という風にsuffixをつけてセットしてください
