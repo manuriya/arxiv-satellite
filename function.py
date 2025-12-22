@@ -85,7 +85,6 @@ class ArticleSummarizer:
         except Exception:
             summary = "要約の取得に失敗しました。"
         finally:
-            print(summary)
             # return self.format_summarize_for_attachment(summary)
             return self.format_summarize_for_blocks(summary)
 

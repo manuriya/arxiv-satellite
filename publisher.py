@@ -56,7 +56,6 @@ class Publisher(ABC):
         """
 
         title, link, authors, description = self.extract_keyword(article)
-        print(title, link)
         return dict(
             title=title,
             title_link=link,
