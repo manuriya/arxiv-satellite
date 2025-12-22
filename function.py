@@ -85,6 +85,7 @@ class ArticleSummarizer:
         except Exception:
             summary = "要約の取得に失敗しました。"
         finally:
+            print(summary)
             # return self.format_summarize_for_attachment(summary)
             return self.format_summarize_for_blocks(summary)
 
@@ -100,16 +101,31 @@ class ArticleSummarizer:
             (str): The summary of the article.
         """
         client = genai.Client(api_key=slackbot_settings.GEMINI_API_TOKEN)
-        response = client.models.generate_content(
-            model="gemini-2.5-flash-lite",
-            contents=f"{url}{slackbot_settings.PROMPT}",
-            config=GenerateContentConfig(
-                tools=[
-                    {"url_context": {}},
-                ],
-            ),
-        )
-        sleep(6)  # for gemini rate limit
+
+        try:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash",
+                contents=f"{url}{slackbot_settings.PROMPT}",
+                config=GenerateContentConfig(
+                    tools=[
+                        {"url_context": {}},
+                        # {"google_search": {}},
+                    ],
+                ),
+            )
+            sleep(12)  # for gemini rate limit
+        except genai.errors.APIError:
+            response = client.models.generate_content(
+                model="gemini-2.5-flash-lite",
+                contents=f"{url}{slackbot_settings.PROMPT}",
+                config=GenerateContentConfig(
+                    tools=[
+                        {"url_context": {}},
+                        # {"google_search": {}},
+                    ],
+                ),
+            )
+            sleep(6)  # for gemini rate limit
         return response.text
 
     @staticmethod
