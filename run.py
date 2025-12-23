@@ -66,6 +66,9 @@ def main(patterns: list[re.Pattern]) -> None:
     """
     slacks = [WebClient(token) for token in slackbot_settings.SLACK_API_TOKEN]
     for article in get_articles(patterns):
+        if len(article["description"]) == 0 or len(article["description"]) > 3000:
+            continue
+
         header = dict(
             type="header", text=dict(type="plain_text", text=article["title"])
         )

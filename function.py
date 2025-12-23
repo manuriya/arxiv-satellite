@@ -1,6 +1,6 @@
 import re
 import uuid
-from time import sleep
+from time import perf_counter, sleep
 
 import requests
 from deepl import Translator, exceptions
@@ -28,7 +28,7 @@ class ArticleTranslator:
         except Exception:
             translate_description = description
         finally:
-            return dict(value=translate_description, short=False)
+            return translate_description
 
     @staticmethod
     def deepl_translator(description: str) -> str:
@@ -82,14 +82,17 @@ class ArticleSummarizer:
         """
         try:
             summary = self.gemini_summarize(link)
+            summary = (
+                self.extract_after_last(summary) if summary is not None else summary
+            )
         except Exception:
-            summary = "要約の取得に失敗しました。"
+            summary = None
         finally:
             # return self.format_summarize_for_attachment(summary)
             return self.format_summarize_for_blocks(summary)
 
     @staticmethod
-    def gemini_summarize(url: str) -> str:
+    def gemini_summarize(url: str) -> str | None:
         """
         Summarize an article using Gemini API.
 
@@ -97,35 +100,61 @@ class ArticleSummarizer:
             url (str): The URL of the article to summarize.
 
         Returns:
-            (str): The summary of the article.
+            (str | None): The summary of the article.
         """
         client = genai.Client(api_key=slackbot_settings.GEMINI_API_TOKEN)
+        contents = f"{slackbot_settings.PROMPT}{url}"
+        config = GenerateContentConfig(
+            tools=[
+                {"url_context": {}},
+                # {"google_search": {}},
+            ],
+            temperature=0.0,
+        )
 
         try:
+            start = perf_counter()
             response = client.models.generate_content(
                 model="gemini-2.5-flash",
-                contents=f"{url}{slackbot_settings.PROMPT}",
-                config=GenerateContentConfig(
-                    tools=[
-                        {"url_context": {}},
-                        # {"google_search": {}},
-                    ],
-                ),
+                contents=contents,
+                config=config,
             )
-            sleep(12)  # for gemini rate limit
-        except genai.errors.APIError:
-            response = client.models.generate_content(
-                model="gemini-2.5-flash-lite",
-                contents=f"{url}{slackbot_settings.PROMPT}",
-                config=GenerateContentConfig(
-                    tools=[
-                        {"url_context": {}},
-                        # {"google_search": {}},
-                    ],
-                ),
-            )
-            sleep(6)  # for gemini rate limit
-        return response.text
+            elapsed = perf_counter() - start
+            sleep(max(int(12 - elapsed), 0) + 1)  # for gemini rate limit
+            output = response.text
+        except genai.errors.APIError as e:
+            match getattr(e, "code", None):
+                case 429:
+                    start = perf_counter()
+                    response = client.models.generate_content(
+                        model="gemini-2.5-flash-lite",
+                        contents=contents,
+                        config=config,
+                    )
+                    elapsed = perf_counter() - start
+                    sleep(max(int(6 - elapsed), 0) + 1)  # for gemini rate limit
+                    output = response.text
+                case _:
+                    output = None
+
+        return output
+
+    @staticmethod
+    def extract_after_last(text: str, marker: str = "*研究の概要*") -> str | None:
+        """
+        Extracts the substring after the last occurrence of a specified marker in the text.
+
+        Args:
+            text (str): The input text to search within.
+            marker (str, optional): The marker string to search for. Defaults to "*研究の概要*".
+
+        Returns:
+            (str | None): The substring from the last occurrence of the marker to the end of the text, or None if the marker is not found.
+        """
+        idx = text.rfind(marker)
+        if idx == -1:
+            return None
+        return text[idx:]
 
     @staticmethod
     def format_summarize_for_attachment(summary: str) -> list[dict[str, str | bool]]:
@@ -160,21 +189,21 @@ class ArticleSummarizer:
         return fields
 
     @staticmethod
-    def format_summarize_for_blocks(summary: str) -> str:
+    def format_summarize_for_blocks(summary: str | None) -> str:
         """
         Format a summary text for Slack block rendering by converting Markdown-style formatting to Slack-compatible formatting.
 
         Args:
-            summary (str): The raw summary text containing Markdown-style formatting. May contain various line ending formats (\r\n, \r, \n).
+            summary (str | None): The raw summary text containing Markdown-style formatting. May contain various line ending formats (\r\n, \r, \n).
 
         Returns:
             (str): The formatted summary text with Slack-compatible formatting. Headings and bold text are converted to use Slack's *text* syntax.
         """
+        if summary is None:
+            return ""
+
         # Normalize line endings to Unix-style (\n)
         s = summary.replace("\r\n", "\n").replace("\r", "\n").strip()
-
-        # Converts Markdown headings (## Title) to Slack bold format (*Title*)
-        s = re.sub(r"^##\s+(.+)$", r"*\1*", s, flags=re.MULTILINE)
 
         # Converts Markdown bold syntax (**text** or __text__) to Slack bold format (*text*)
         s = re.sub(r"\*\*(.+?)\*\*", r"*\1*", s)

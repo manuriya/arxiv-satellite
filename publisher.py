@@ -8,7 +8,7 @@ import requests
 from feedparser.util import FeedParserDict
 
 import slackbot_settings
-from function import ArticleSummarizer
+from function import ArticleSummarizer, ArticleTranslator
 
 
 class Publisher(ABC):
@@ -56,11 +56,18 @@ class Publisher(ABC):
         """
 
         title, link, authors, description = self.extract_keyword(article)
+        description = ArticleSummarizer()(link)
+        match len(description):
+            case 0:
+                description = ArticleTranslator()(description)
+            case _:
+                description = description
+
         return dict(
             title=title,
             title_link=link,
             author=authors,
-            description=ArticleSummarizer()(link),
+            description=description,
             color=color,
         )
 
@@ -101,6 +108,7 @@ class Publisher(ABC):
                     [p.search(title) for p in patterns if p.search(title) is not None]
                 ):
                     count += 1
+                    print(f"Progress: {count:02}")
                     yield self.format_article(
                         article, slackbot_settings.COLOR[(count - 1) % 7]
                     )
