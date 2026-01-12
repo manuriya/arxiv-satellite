@@ -7,7 +7,6 @@ import feedparser
 import requests
 from feedparser.util import FeedParserDict
 
-import slackbot_settings
 from function import ArticleSummarizer, ArticleTranslator
 
 
@@ -43,20 +42,22 @@ class Publisher(ABC):
         """
         pass
 
-    def format_article(self, article: FeedParserDict, color: str) -> dict[str, str]:
+    def format_article(
+        self, article: FeedParserDict, patterns: list[re.Pattern]
+    ) -> dict[str, str]:
         """
         Format an article for display.
 
         Args:
             article (FeedParserDict): The article to format.
-            color (str): The color to use for the article.
+            patterns (list[re.Pattern]): A list of compiled regex patterns.
 
         Returns:
             (dict[str, str]): The formatted article.
         """
 
         title, link, authors, description = self.extract_keyword(article)
-        description = ArticleSummarizer()(link)
+        description = ArticleSummarizer()(link, patterns)
         match len(description):
             case 0:
                 description = ArticleTranslator()(description)
@@ -68,7 +69,6 @@ class Publisher(ABC):
             title_link=link,
             author=authors,
             description=description,
-            color=color,
         )
 
     @abstractmethod
@@ -109,9 +109,9 @@ class Publisher(ABC):
                 ):
                     count += 1
                     print(f"Progress: {count:02}")
-                    yield self.format_article(
-                        article, slackbot_settings.COLOR[(count - 1) % 7]
-                    )
+                    yield self.format_article(article, patterns)
+            if count > 0:
+                break
 
 
 class ArXiv(Publisher):

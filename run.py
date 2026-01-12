@@ -1,5 +1,6 @@
 # coding: UTF-8
 import re
+from formatter import BlockCreator
 from importlib import import_module
 
 from omegaconf import OmegaConf
@@ -69,33 +70,13 @@ def main(patterns: list[re.Pattern]) -> None:
         if len(article["description"]) == 0 or len(article["description"]) > 3000:
             continue
 
-        header = dict(
-            type="header", text=dict(type="plain_text", text=article["title"])
-        )
-        url = dict(
-            type="section",
-            text=dict(
-                type="mrkdwn",
-                text=f"<{article['title_link']}|{article['title_link']}>",
-            ),
-        )
-        blocks = [
-            dict(type="divider"),
-            header,
-            url,
-            dict(
-                type="section", text={"type": "mrkdwn", "text": article["description"]}
-            ),
-        ]
-
         for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
             slack.chat_postMessage(
                 channel=channel,
                 text="",
                 as_user=True,
                 unfurl_links=False,
-                blocks=blocks,
-                # attachments=[dict(color=article["color"], fields=article["fields"])],
+                blocks=BlockCreator()(article),
             )
 
 

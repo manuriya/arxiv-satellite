@@ -70,7 +70,7 @@ class ArticleTranslator:
 
 
 class ArticleSummarizer:
-    def __call__(self, link: str) -> dict:
+    def __call__(self, link: str, patterns: list[re.Pattern]) -> dict:
         """
         Summarize an article.
 
@@ -81,10 +81,11 @@ class ArticleSummarizer:
             (dict): A dictionary containing the summary of the article.
         """
         try:
-            summary = self.gemini_summarize(link)
+            summary = self.gemini_summarize(link, patterns)
             summary = (
                 self.extract_after_last(summary) if summary is not None else summary
             )
+            print(summary)
         except Exception:
             summary = None
         finally:
@@ -92,7 +93,24 @@ class ArticleSummarizer:
             return self.format_summarize_for_blocks(summary)
 
     @staticmethod
-    def gemini_summarize(url: str) -> str | None:
+    def extract_after_last(text: str, marker: str = "研究の概要") -> str | None:
+        """
+        Extracts the substring after the last occurrence of a specified marker in the text.
+
+        Args:
+            text (str): The input text to search within.
+            marker (str, optional): The marker string to search for.
+
+        Returns:
+            (str | None): The substring from the last occurrence of the marker to the end of the text, or None if the marker is not found.
+        """
+        idx = text.rfind(marker)
+        if idx == -1:
+            return None
+        return text[idx:]
+
+    @staticmethod
+    def gemini_summarize(url: str, patterns: list[re.Pattern]) -> str | None:
         """
         Summarize an article using Gemini API.
 
@@ -104,6 +122,7 @@ class ArticleSummarizer:
         """
         client = genai.Client(api_key=slackbot_settings.GEMINI_API_TOKEN)
         contents = f"{slackbot_settings.PROMPT}{url}"
+
         config = GenerateContentConfig(
             tools=[
                 {"url_context": {}},
@@ -136,25 +155,7 @@ class ArticleSummarizer:
                     output = response.text
                 case _:
                     output = None
-
         return output
-
-    @staticmethod
-    def extract_after_last(text: str, marker: str = "*研究の概要*") -> str | None:
-        """
-        Extracts the substring after the last occurrence of a specified marker in the text.
-
-        Args:
-            text (str): The input text to search within.
-            marker (str, optional): The marker string to search for. Defaults to "*研究の概要*".
-
-        Returns:
-            (str | None): The substring from the last occurrence of the marker to the end of the text, or None if the marker is not found.
-        """
-        idx = text.rfind(marker)
-        if idx == -1:
-            return None
-        return text[idx:]
 
     @staticmethod
     def format_summarize_for_attachment(summary: str) -> list[dict[str, str | bool]]:
