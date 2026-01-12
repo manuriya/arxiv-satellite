@@ -68,7 +68,7 @@ class BlockCreator:
                     ),
                     dict(
                         type="text",
-                        text=f"{description['text']}\n\n",
+                        text=f"{description['text']}",
                     ),
                 ],
             )
