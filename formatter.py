@@ -63,7 +63,7 @@ class BlockCreator:
                 elements=[
                     dict(
                         type="text",
-                        text=f"{description['title']}\n",
+                        text=f"\n{description['title']}\n",
                         style=dict(bold=True),
                     ),
                     dict(
