@@ -110,8 +110,6 @@ class Publisher(ABC):
                     count += 1
                     print(f"Progress: {count:02}")
                     yield self.format_article(article, patterns)
-            if count > 0:
-                break
 
 
 class ArXiv(Publisher):
