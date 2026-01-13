@@ -70,14 +70,18 @@ def main(patterns: list[re.Pattern]) -> None:
         if len(article["description"]) == 0 or len(article["description"]) > 3000:
             continue
 
-        for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
-            slack.chat_postMessage(
-                channel=channel,
-                text="",
-                as_user=True,
-                unfurl_links=False,
-                blocks=BlockCreator()(article),
-            )
+        try:
+            for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
+                slack.chat_postMessage(
+                    channel=channel,
+                    text="",
+                    as_user=True,
+                    unfurl_links=False,
+                    blocks=BlockCreator()(article),
+                )
+        except Exception as e:
+            print(article)
+            print(f"Error posting to Slack: {e}")
 
 
 if __name__ == "__main__":

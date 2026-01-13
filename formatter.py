@@ -1,17 +1,27 @@
 class BlockCreator:
     def __call__(self, article: dict[str, str]) -> dict:
-        blocks = [
-            dict(type="divider"),
-            self._set_header(article["title"]),
-            self._set_url(article["title_link"]),
-            self._set_tags(article["description"]),
-            self._set_description(article["description"]),
-        ]
-        return blocks
+        divider = dict(type="divider")
+        header = self._set_header(article["title"])
+        url = self._set_url(article["title_link"])
+        tags = self._set_tags(article["description"])
+        description = self._set_description(article["description"])
+        return [divider] + header + [url, tags, description]
 
     @staticmethod
-    def _set_header(header: str) -> dict:
-        return dict(type="header", text=dict(type="plain_text", text=header))
+    def _set_header(header: str) -> list[dict]:
+        if len(header) > 150:
+            spaces = [i for i, ch in enumerate(header) if ch == " " and i < 150]
+            return [
+                dict(
+                    type="header",
+                    text=dict(type="plain_text", text=header[: spaces[-1]]),
+                ),
+                dict(
+                    type="header",
+                    text=dict(type="plain_text", text=header[spaces[-1] :]),
+                ),
+            ]
+        return [dict(type="header", text=dict(type="plain_text", text=header))]
 
     @staticmethod
     def _set_url(url: str) -> dict:
@@ -20,7 +30,9 @@ class BlockCreator:
             elements=[
                 dict(
                     type="rich_text_section",
-                    elements=[dict(type="link", url=url), dict(type="text", text="\n")],
+                    elements=[
+                        dict(type="link", url=url),
+                    ],
                 ),
             ],
         )
