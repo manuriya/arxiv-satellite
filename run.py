@@ -69,7 +69,6 @@ def main(patterns: list[re.Pattern]) -> None:
     for article in get_articles(patterns):
         if len(article["description"]) == 0 or len(article["description"]) > 3000:
             continue
-
         try:
             for slack, channel in zip(slacks, slackbot_settings.POST_CHANNEL):
                 slack.chat_postMessage(

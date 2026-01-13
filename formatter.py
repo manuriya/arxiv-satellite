@@ -39,11 +39,7 @@ class BlockCreator:
 
     @staticmethod
     def _set_tags(description: str) -> dict:
-        tag_text = [
-            s
-            for s in description.split("\n\n")[-1].replace(" ", "").split("#")
-            if len(s) > 0
-        ]
+        tag_text = [s for s in description.split("#")[-3:] if len(s) > 0]
 
         elements = [
             dict(type="text", text="#", style=dict(italic=True, code=True)),
@@ -67,7 +63,8 @@ class BlockCreator:
     def _set_description(description: str) -> dict:
         description_items = [
             dict(title=s.split("\n")[0], text="\n".join(s.split("\n")[1:]))
-            for s in description.split("\n\n")[:-1]
+            for s in description.split("#")[0].split("\n\n")
+            if len(s) > 0
         ]
         elements = [
             dict(
