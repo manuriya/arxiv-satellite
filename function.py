@@ -134,7 +134,7 @@ class ArticleSummarizer:
         try:
             start = perf_counter()
             response = client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-3.5-flash",
                 contents=contents,
                 config=config,
             )
@@ -146,7 +146,7 @@ class ArticleSummarizer:
                 case 429:
                     start = perf_counter()
                     response = client.models.generate_content(
-                        model="gemini-2.5-flash-lite",
+                        model="gemini-3.1-flash-lite",
                         contents=contents,
                         config=config,
                     )
