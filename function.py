@@ -3,7 +3,7 @@ import uuid
 from time import perf_counter, sleep
 
 import requests
-from deepl import Translator, exceptions
+from deepl import DeepLClient, exceptions
 from google import genai
 from google.genai.types import GenerateContentConfig
 
@@ -41,7 +41,7 @@ class ArticleTranslator:
         Returns:
             (str): The translated description.
         """
-        translator = Translator(slackbot_settings.DEEPL_API_TOKEN)
+        translator = DeepLClient(slackbot_settings.DEEPL_API_TOKEN)
         return translator.translate_text(
             description, source_lang="EN", target_lang="JA"
         ).text
